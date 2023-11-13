@@ -1,39 +1,5 @@
 #include "AVLTree.h"
 
-void AVLTree::inOrder(Node *node)
-{
-    if (node != NULL)
-    {
-        inOrder(node->left);
-        std::cout << node->key << " ";
-        inOrder(node->right);
-    }
-}
-
-std::vector<int> AVLTree::inOrderVec(Node *node)
-{
-    std::vector<int> res;
-    if (node != nullptr)
-    {
-        inOrder(node->left);
-        res.push_back(node->key);
-        inOrder(node->right);
-    }
-    return res;
-}
-
-bool AVLTree::check(Node *node)
-{
-    if (node == nullptr)
-        return true;
-
-    int balance = getBalance(node);
-    if (abs(balance) > 1)
-        return false;
-
-    return check(node->left) && check(node->right);
-}
-
 AVLTree::AVLTree() : root(nullptr) {}
 
 int AVLTree::height(Node *node)
@@ -93,7 +59,7 @@ Node *AVLTree::rotateRight(Node *node)
     return nodeLeft;
 }
 
-Node *AVLTree::balance(Node *node) // балансировка узла node
+Node *AVLTree::balance(Node *node)
 {
     fixHeight(node);
     if (getBalance(node) == 2)
@@ -108,10 +74,10 @@ Node *AVLTree::balance(Node *node) // балансировка узла node
             node->left = rotateLeft(node->left);
         return rotateRight(node);
     }
-    return node; // балансировка не нужна
+    return node;
 }
 
-Node *AVLTree::insert(Node *node, int k) // вставка ключа k в дерево с корнем node
+Node *AVLTree::insert(Node *node, int k)
 {
     if (!node)
         return new Node(k);
@@ -122,17 +88,22 @@ Node *AVLTree::insert(Node *node, int k) // вставка ключа k в де�
     return balance(node);
 }
 
-void AVLTree::insert(int k) // вставка ключа k в дерево с корнем node
+void AVLTree::insert(int k)
 {
     root = insert(root, k);
 }
 
-Node *AVLTree::findMin(Node *node) // поиск узла с минимальным ключом в дереве node
+Node *AVLTree::findMin(Node *node)
 {
     return node->left ? findMin(node->left) : node;
 }
 
-Node *AVLTree::removeMin(Node *node) // удаление узла с минимальным ключом из дерева node
+Node *AVLTree::findMin()
+{
+    return root = findMin(root);
+}
+
+Node *AVLTree::removeMin(Node *node)
 {
     if (!node->left)
         return node->right;
@@ -140,7 +111,12 @@ Node *AVLTree::removeMin(Node *node) // удаление узла с миним�
     return balance(node);
 }
 
-Node *AVLTree::remove(Node *node, int k) // удаление ключа k из дерева node
+void AVLTree::removeMin()
+{
+    root = removeMin(root);
+}
+
+Node *AVLTree::remove(Node *node, int k)
 {
     if (!node)
         return nullptr;
@@ -163,16 +139,57 @@ Node *AVLTree::remove(Node *node, int k) // удаление ключа k из �
     return balance(node);
 }
 
+void AVLTree::remove(int k)
+{
+    root = remove(root, k);
+}
+
+void AVLTree::inOrder(Node *node)
+{
+    if (node != nullptr)
+    {
+        inOrder(node->left);
+        std::cout << node->key << " ";
+        inOrder(node->right);
+    }
+}
+
 void AVLTree::inOrder()
 {
     inOrder(root);
-    std::cout << std::endl; // добавлено для перехода на новую строку после вывода
+    std::cout << std::endl;
+}
+
+std::vector<int> AVLTree::inOrderVec(Node *node)
+{
+    std::vector<int> res;
+    if (node != nullptr)
+    {
+        std::vector<int> left = inOrderVec(node->left);
+        res.insert(res.end(), left.begin(), left.end());
+        res.push_back(node->key);
+        std::vector<int> right = inOrderVec(node->right);
+        res.insert(res.end(), right.begin(), right.end());
+    }
+    return res;
 }
 
 std::vector<int> AVLTree::inOrderVec()
 {
     std::vector<int> res = inOrderVec(root);
     return res;
+}
+
+bool AVLTree::check(Node *node)
+{
+    if (node == nullptr)
+        return true;
+
+    int balance = getBalance(node);
+    if (abs(balance) > 1)
+        return false;
+
+    return check(node->left) && check(node->right);
 }
 
 bool AVLTree::check()

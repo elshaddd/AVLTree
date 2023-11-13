@@ -1,22 +1,23 @@
 all: main researches test clean
 
 main: main.o
-	g++ main.o -o main
+	g++ main.o AVLTree.o Node.o -o main
 
 test: tests.o 
-	g++ tests.o -lgtest -o test
+	g++ tests.o AVLTree.o Node.o -lgtest -o test
 	
 researches: research.o
-	g++ research.o -o researches
+	g++ research.o AVLTree.o Node.o -o researches
 
 
-main.o:
+main.o: modules.o
 	g++ -c *.cpp -Imodules
-tests.o:
+tests.o: modules.o
 	g++ -c tests/*.cpp -lgtest -Imodules
-research.o:
+research.o: modules.o
 	g++ -c research/*.cpp -Imodules
-
+modules.o:
+	g++ -c modules/AVLTree/*.cpp  modules/Node/*.cpp -Imodules
 
 clean:
 	rm -f *.o

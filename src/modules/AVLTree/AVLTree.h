@@ -1,16 +1,10 @@
-#include "../node/Node.h"
+#include "../Node/Node.h"
 #include <vector>
 #include <iostream>
 
 class AVLTree
 {
     Node *root;
-
-    void inOrder(Node *node);
-
-    std::vector<int> inOrderVec(Node *node);
-
-    bool check(Node *node);
 
 public:
     AVLTree();
@@ -45,13 +39,25 @@ public:
 
     Node *findMin(Node *node);
 
+    Node *findMin();
+
     Node *removeMin(Node *node);
+
+    void removeMin();
 
     Node *remove(Node *node, int k);
 
+    void remove(int k);
+
+    void inOrder(Node *node);
+
     void inOrder();
 
+    std::vector<int> inOrderVec(Node *node);
+
     std::vector<int> inOrderVec();
+
+    bool check(Node *node);
 
     bool check();
 };
